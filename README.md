@@ -32,7 +32,7 @@ Esta Aplicación Web contiene ejemplos prácticos en el uso de algunos de los co
 + **dbdemo01_27feb2023_1.bak**: Backup de la DB, está basada en la DB Northwind, pero esta versión se ha sometido a cambios.
 
 # ACERCA DEL AUTOR
-_Oscar Nivia_, Ingeniero de Preventa Progress Software para CALA
+_Oscar Nivia_, Ingeniero de Ventas Progress Software para CALA
 > oscar.nivia@progress.com <br>onivia@hotmail.com <br>https://www.linkedin.com/in/oscar-nivia-36b591150/
 
 # LINKS DE INTERES
