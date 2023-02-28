@@ -128,24 +128,8 @@
     public CustomerDto customer = new();
     bool ExportAllPages { get; set; }
 
-    public string txt1 { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await js.InvokeVoidAsync("cargaScript", "assets/js/libreriaGeneral1.js");
-            await js.InvokeVoidAsync("adicionarEstilo", "text1", "form-control");
-            await js.InvokeVoidAsync("adicionarEstilo", "text2", "form-control");
-            await js.InvokeVoidAsync("adicionarEstilo", "text3", "form-control");
-            await js.InvokeVoidAsync("adicionarEstilo", "text4", "form-control");
-        }
-    }
-
-
     async Task CreateCustomer()
     {
-
         customer = await CustomerService.CreateCustomer(customer);
     }
 
@@ -153,5 +137,4 @@
     {
         CustomerService.DialogVisible = true;
     }
-
 }
