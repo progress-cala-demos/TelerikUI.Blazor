@@ -1,0 +1,80 @@
+﻿
+@inject NavigationManager NavigationManager
+
+<div class="collapse navbar-collapse  w-auto h-auto" id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+        <hr class="horizontal light mt-0">
+        <li class="nav-item mt-3">
+            <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder text-white">Componentes</h6>
+        </li>
+        <li class="nav-item">
+            <a data-bs-toggle="collapse" href="#dashboardsExamples" class="nav-link text-white active" aria-controls="dashboardsExamples" role="button" aria-expanded="false">
+                <i class="material-icons-round opacity-10">dashboard</i>
+                <span class="nav-link-text ms-2 ps-1">Demos</span>
+            </a>
+            <div class="collapse show " id="dashboardsExamples">
+                <ul class="nav ">
+                    <li class="nav-item @GetActive("", NavLinkMatch.All) ">
+                        <a class="nav-link text-dark @GetActive("", NavLinkMatch.All)" href="/">
+                            <span class="sidenav-mini-icon"> I </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Inicio </span>
+                        </a>
+                    </li>
+                    <li class="nav-item @GetActive("pagina1", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina1">
+                            <span class="sidenav-mini-icon"> C </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Customers-C-FormTable </span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item @GetActive("pagina2", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina2">
+                            <span class="sidenav-mini-icon"> P </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Products-U-Table </span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item @GetActive("pagina3", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina3">
+                            <span class="sidenav-mini-icon"> O </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Orders-U-Table </span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item @GetActive("pagina4", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina4">
+                            <span class="sidenav-mini-icon"> O </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Orders-R-Chart </span>
+                        </NavLink>
+                    </li>
+                    @*Paginas 5 y 6 fueron implementados en la demostracion*@
+                    <li class="nav-item @GetActive("pagina5", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina5">
+                            <span class="sidenav-mini-icon"> P </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Products-U-Table-2 </span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item @GetActive("pagina6", NavLinkMatch.All) ">
+                        <NavLink class="nav-link text-dark " href="pagina6">
+                            <span class="sidenav-mini-icon"> O </span>
+                            <span class="sidenav-normal  ms-2  ps-1"> Orders-R-Report </span>
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+@code {
+    //[Inject]
+    //NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized() => NavigationManager.LocationChanged += (s, e) => StateHasChanged();
+
+    bool IsActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix)
+    {
+        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).ToLower();
+        bool b1 = navLinkMatch == NavLinkMatch.All ? relativePath == href.ToLower() : relativePath.StartsWith(href.ToLower());
+        return b1;
+    }
+
+    public string GetActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix) => IsActive(href, navLinkMatch) ? "active" : "";
+}

@@ -1,0 +1,71 @@
+﻿@page "/pagina4"
+@using System.Globalization;
+@inject SaleService SaleService
+
+<PageTitle>Grafica de ventas por año</PageTitle>
+
+<div class="container-fluid my-3 py-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4" id="basic-info">
+                <div class="card-header">
+                    <h5>Grafica de ventas por año</h5>
+
+                    <TelerikDatePicker @bind-Value="@selectedDate"
+                                       Size="sm"
+                                       BottomView="@CalendarView.Decade"
+                                       Format="yyyy"
+                                       OnChange="SelectedYear">
+                    </TelerikDatePicker>
+
+                    <TelerikChart>
+                        <ChartTooltip Visible="true"></ChartTooltip>
+                        <ChartLegend Position="ChartLegendPosition.Bottom"></ChartLegend>
+
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Line"
+                                         Name="Año"
+                                         Data="SaleService.ChartSales"
+                                         Field="@nameof(ChartSaleDto.TotalMonth)">
+                            </ChartSeries>
+                        </ChartSeriesItems>
+
+                        <ChartCategoryAxes>
+                            <ChartCategoryAxis Categories="@Months"></ChartCategoryAxis>
+                        </ChartCategoryAxes>
+
+                        <ChartValueAxes>
+                            <ChartValueAxis AxisCrossingValue="@AxisCrossingValue">
+                                <ChartValueAxisLabels Format="$ {0}"></ChartValueAxisLabels>
+                            </ChartValueAxis>
+                        </ChartValueAxes>
+
+                    </TelerikChart>
+                </div>
+                <div class="m-4 mt-0">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    DateTime selectedDate { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedDate = new DateTime(1996, 01, 01);
+        await SelectedYear();
+    }
+
+    async Task SelectedYear()
+    {
+        await SaleService.GetSalesByYear(selectedDate.Year);
+        Months = SaleService.ChartSales.Select(c => c.Month).ToArray();
+    }
+
+    public string[] Months = new string[] { };
+
+    public object[] AxisCrossingValue = new object[] { 0 };
+}

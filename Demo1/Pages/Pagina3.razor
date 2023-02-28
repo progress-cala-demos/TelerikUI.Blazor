@@ -1,0 +1,98 @@
+﻿@page "/pagina3"
+@inject OrderService OrderService
+@inject CityService CityService
+@inject GridConfig GridConfig
+
+<PageTitle>Pedidos</PageTitle>
+
+<div class="container-fluid my-3 py-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4" id="basic-info">
+                <div class="card-header">
+                    <h5>Pedidos</h5>
+                </div>
+                <div class="m-4 mt-0">
+                    <TelerikGrid @ref="OrderService.OrderGrid"
+                                 TItem=@OrderDto
+                                 OnRead=@((args) => OrderService.GetOrders(args))
+                                 OnCreate=@((args) => OrderService.CreateOrder((OrderDto)args.Item))
+                                 OnUpdate=@((args) => OrderService.UpdateOrder((OrderDto)args.Item))
+                                 FilterMode="@GridFilterMode.FilterMenu"
+                                 EditMode="GridEditMode.Popup"
+                                 Height="660px"
+                                 Sortable="true"
+                                 Pageable="true"
+                                 Resizable="true"
+                                 Reorderable="true"
+                                 Navigable="true"
+                                 Groupable="true"
+                                 LoadGroupsOnDemand="true"
+                                 EnableLoaderContainer="true"
+                                 @bind-Page="GridConfig.CurrentPage"
+                                 @bind-PageSize="GridConfig.PageSize"
+                                 Class="table-striped">
+                        <DetailTemplate>
+                            @{
+                                OrderDto o = context as OrderDto;
+                                <ListOrderDetail OrderId="o.OrderId" />
+                            }
+                        </DetailTemplate>
+                        <GridSettings>
+                            <GridPopupEditSettings Width="350px" MaxHeight="700px" />
+                            <GridPagerSettings ButtonCount="GridConfig.ButtonsCount"
+                                               PageSizes="GridConfig.PageSizes"
+                                               InputType="PagerInputType.Buttons"
+                                               Position="PagerPosition.Bottom" />
+                        </GridSettings>
+                        <GridToolBarTemplate>
+                            <GridCommandButton Icon="FontIcon.Plus" Command="Add">Adicionar</GridCommandButton>
+                        </GridToolBarTemplate>
+                        <GridColumns>
+                            <GridColumn Field="OrderId" Title="ID" Editable=false Width="100px" />
+                            <GridColumn Field="OrderDate" Title="Registro" Editable=false />
+                            <GridColumn Field="CustomerId" Title="Compañia ID" Editable=false />
+                            <GridColumn Field="CompanyName" Title="Compañia" Filterable=false>
+                                <EditorTemplate>
+                                    @{
+                                        var o = context as OrderDto;
+                                        <TelerikAutoComplete TItem="OrderDto"
+                                                         OnRead="((args) => OrderService.GetCustomersByCompanyName(args))"
+                                                         @bind-Value="o.CompanyName"
+                                                         ValueField="@nameof(OrderDto.CompanyName)"
+                                                         Filterable="true"
+                                                         MinLength="2"
+                                                         Placeholder="Compañia"
+                                                         FilterOperator="StringFilterOperator.StartsWith"
+                                                         Class="form-control">
+                                            <AutoCompleteSettings>
+                                                <AutoCompletePopupSettings Height="auto" MaxHeight="200px" />
+                                            </AutoCompleteSettings>
+                                        </TelerikAutoComplete>
+                                    }
+                                </EditorTemplate>
+                            </GridColumn>
+                            <GridColumn Field="ShipAddress" Title="Dirección" />
+                            <GridColumn Field="RequiredDate" Title="Fecha Entrega">
+                                <EditorTemplate>
+                                    @{
+                                        var o = context as OrderDto;
+                                        o.RequiredDate = o.RequiredDate == null ? DateTime.Now.AddDays(3) : o.RequiredDate;
+                                        <TelerikDatePicker Min="DateTime.Now" Max="DateTime.Now.AddYears(1)" @bind-Value="o.RequiredDate" />
+                                    }
+                                </EditorTemplate>
+                            </GridColumn>
+                            <GridCommandColumn>
+                                <GridCommandButton Command="Edit" Icon="@FontIcon.Pencil" ThemeColor="@ThemeConstants.Button.ThemeColor.Light">Editar</GridCommandButton>
+                            </GridCommandColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

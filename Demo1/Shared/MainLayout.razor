@@ -1,0 +1,28 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime js
+
+<TelerikRootComponent>
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y bg-white" id="sidenav-main">
+        <NavBrand/>
+        <NavMenu/>
+    </aside>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <NavBar/>
+
+        @Body
+
+        <NavFooter/>
+    </main>
+</TelerikRootComponent>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("cargaScript", "assets/js/libreriaUNO.js");
+            await js.InvokeVoidAsync("cargaScript", "assets/js/material-dashboard.js?v=3.0.6");
+            await js.InvokeVoidAsync("cargaScript", "assets/js/libreriaDOS.js");
+        }
+    }
+}

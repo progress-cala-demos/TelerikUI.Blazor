@@ -1,0 +1,31 @@
+﻿@page "/pagina6"
+
+@* https://demos.telerik.com/reporting *@
+@* https://docs.telerik.com/reporting/embedding-reports/display-reports-in-applications/web-application/native-blazor-report-viewer/how-to-use-native-blazor-report-viewer *@
+
+<ReportViewer ServiceType="@ReportViewerServiceType.ReportServer"
+    ReportSource="@(new ReportSourceOptions()
+                {
+                    Report = "Demo1/ReporteFactura1"
+                })"
+    ScaleMode="@(ScaleMode.FitPageWidth)"
+    Height="610px"
+    Width="100%">
+    <ReportViewerSettings>
+        <ReportServerSettings Url="@ServidorReport" Username="@Usuario" Password="@Contrasena"></ReportServerSettings>
+        <SendEmailDialogSettings From="from"
+                                 To="to"
+                                 Cc="cc"
+                                 Subject="Envio del reporte de Orden..."
+                                 Body="@CuerpoEmail"
+                                 Format="PDF">
+        </SendEmailDialogSettings>
+    </ReportViewerSettings>
+</ReportViewer>
+
+@code {
+    public string CuerpoEmail { get; set; } = "Adjunto encontrara PDF de su orden, gracias.";
+    public string ServidorReport { get; set; } = "servidor reportserver";
+    public string Usuario { get; set; } = "admin";
+    public string Contrasena { get; set; } = "contraseña";
+}

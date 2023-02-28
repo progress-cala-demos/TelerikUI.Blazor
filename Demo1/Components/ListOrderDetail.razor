@@ -1,0 +1,112 @@
+﻿@inject OrderDetailService OrderDetailService
+
+<TelerikGrid TItem=@OrderDetailDto
+             OnRead=@((args) => OrderDetailService.GetOrderDetails(args, OrderId))
+             OnCreate=@((args) => OrderDetailService.CreateOrderDetail((OrderDetailDto)args.Item, OrderId))
+             OnUpdate=@((args) => OrderDetailService.UpdateOrderDetail((OrderDetailDto)args.Item))
+             FilterMode="@GridFilterMode.FilterMenu"
+             EditMode="GridEditMode.Inline"
+             Sortable="true"
+             Pageable="true"
+             Resizable="true"
+             Reorderable="true"
+             Navigable="true"
+             EnableLoaderContainer="true"
+             @bind-Page="gridService.CurrentPage"
+             @bind-PageSize="gridService.PageSize">
+    <GridSettings>
+        <GridPagerSettings ButtonCount="gridService.ButtonsCount"
+                           PageSizes="gridService.PageSizes"
+                           InputType="PagerInputType.Buttons"
+                           Position="PagerPosition.Bottom" />
+    </GridSettings>
+    <GridToolBarTemplate>
+        <GridCommandButton Icon="FontIcon.Plus" Size="sm" Command="Add" OnClick="(() => isCreate = true)">Adicionar</GridCommandButton>
+    </GridToolBarTemplate>
+    <GridColumns>
+        <GridColumn Field="ProductId" Title="ID Producto" Editable=false Width="100px" />
+        <GridColumn Field="ProductName" Title="Producto" Editable=isCreate Filterable=false Sortable=false Width="200px">
+            <EditorTemplate>
+                @{
+                    var o = context as OrderDetailDto;
+                    <TelerikAutoComplete TItem="OrderDetailDto"
+                                     OnRead="((args) => OrderDetailService.GetDetailsByProductName(args))"
+                                         @bind-Value="o.ProductName"
+                                     ValueField="@nameof(OrderDetailDto.ProductName)"
+                                     Filterable="true"
+                                     MinLength="2"
+                                     PageSize="5"
+                                     Placeholder="Producto"
+                                     OnBlur="(() => UpdateDetail(o))">
+                        <AutoCompleteSettings>
+                            <AutoCompletePopupSettings Height="auto" MaxHeight="200px" />
+                        </AutoCompleteSettings>
+                    </TelerikAutoComplete>
+                    <TelerikValidationMessage For="(() => o.ProductId)" />
+                }
+            </EditorTemplate>
+        </GridColumn>
+        <GridColumn Field="UnitPrice" Title="Precio Unitario" Editable=false />
+        <GridColumn Field="Quantity" Title="Cantidad" Editable=isCreate>
+            <EditorTemplate>
+                @{
+                    var o = context as OrderDetailDto;
+                    <TelerikNumericTextBox @bind-Value="o.Quantity" Placeholder="Cantidad" />
+                    <TelerikValidationMessage For="(() => o.Quantity)" />
+                }
+            </EditorTemplate>
+        </GridColumn>
+        <GridColumn Field="Discount" Title="Descuento" />
+        <GridCommandColumn Width="210px" HeaderClass="padding">
+            <GridCommandButton Size="sm" Command="Edit" OnClick="(() => isCreate = false)" Icon="@FontIcon.Pencil">Editar</GridCommandButton>
+            <GridCommandButton Size="sm" Command="Save" Icon="@FontIcon.Save" ShowInEdit="true" ThemeColor="primary">Aceptar</GridCommandButton>
+            <GridCommandButton Size="sm" Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true">Cancelar</GridCommandButton>
+        </GridCommandColumn>
+    </GridColumns>
+</TelerikGrid>
+
+<style>
+    .k-button-sm {
+        padding: 6px 10px;
+        font-size: 0.7em;
+    }
+
+    .k-grid .k-command-cell, .k-grid .k-edit-cell, .k-grid .k-grid-edit-row td {
+        padding: 6px 15px;
+        text-overflow: clip;
+    }
+</style>
+
+@code {
+    [Parameter] public int OrderId { get; set; }
+    public GridConfig gridService = new(5, new List<int?> { 5, 10, 20, 50, null }, 1, 5);
+    bool isCreate;
+
+    void UpdateDetail(OrderDetailDto o)
+    {
+        if (OrderDetailService.OrderDetails.Count > 0)
+        {
+            var detailAdded = OrderDetailService.OrderDetails.FirstOrDefault(od => od.ProductName.ToLower() == o.ProductName.ToLower());
+
+            if (detailAdded != null)
+            {
+                o.ProductId = detailAdded.ProductId;
+                o.ProductName = detailAdded.ProductName;
+                o.UnitPrice = detailAdded.UnitPrice;
+            }
+            else
+            {
+                CleanValues(o);
+            }
+        }
+    }
+
+    void CleanValues(OrderDetailDto o)
+    {
+        o.ProductId = string.Empty;
+        o.ProductName = string.Empty;
+        o.UnitPrice = 0;
+        o.Quantity = 0;
+        o.Discount = 0;
+    }
+}

@@ -1,0 +1,157 @@
+﻿@page "/pagina1"
+@inject CustomerService CustomerService
+@inject CityService CityService
+@inject GridConfig GridConfig
+@inject IJSRuntime js
+
+<PageTitle>Clientes</PageTitle>
+
+<TelerikDialog @bind-Visible="@CustomerService.DialogVisible" Width="320px" Height="200px" Title="Crear cliente">
+    <DialogContent>
+        <p class="text-align">¿Seguro que quiere crear el cliente @customer.CompanyName?</p>
+        <TelerikButton Size="@ThemeConstants.Button.Size.Medium" OnClick="@(() => CustomerService.DialogVisible = false)">No</TelerikButton>
+        <TelerikButton Size="@ThemeConstants.Button.Size.Medium" ThemeColor="primary" OnClick="CreateCustomer">Si</TelerikButton>
+    </DialogContent>
+</TelerikDialog>
+
+<div class="container-fluid my-3 py-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4" id="basic-info">
+                <div class="card-header">
+                    <h5>Cliente Info</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <EditForm Model="customer" OnValidSubmit="SubmitHandle">
+                        <DataAnnotationsValidator />
+                        <div class="row">
+                            <div class="col-sm-6 col-6">
+                                <div class="input-group input-group-static">
+                                    <label>Compañia</label>
+                                    <TelerikTextBox Id="text1" Class="form-control" Placeholder="Compañia" @bind-Value="customer.CompanyName" />
+                                    <TelerikValidationMessage For="@(() => customer.CompanyName)" />
+                                </div><br />
+                            </div>
+                            <div class="col-sm-6 col-6">
+                                <div class="input-group input-group-static">
+                                    <label>Nombre de Contacto</label>
+                                    <TelerikTextBox Id="text2" Class="form-control" Placeholder="Nombre de contacto" @bind-Value="customer.ContactName" />
+                                    <TelerikValidationMessage For="@(() => customer.ContactName)" />
+                                </div><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-6">
+                                <div class="input-group input-group-static">
+                                    <label>Ciudad</label>
+                                    <TelerikAutoComplete Id="text3"
+                                                         TItem="string"
+                                                         OnRead="((args) => CityService.CitiesByName(args))"
+                                                         @bind-Value="customer.City"
+                                                         ValueField="string"
+                                                         Placeholder="Ciudad"
+                                                         Filterable="true"
+                                                         FilterOperator="StringFilterOperator.StartsWith"
+                                                         Class="form-control">
+                                        <AutoCompleteSettings>
+                                            <AutoCompletePopupSettings Height="auto" MaxHeight="200px" />
+                                        </AutoCompleteSettings>
+                                    </TelerikAutoComplete>
+                                    <TelerikValidationMessage For="@(() => customer.City)" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-6">
+                                <div class="input-group input-group-static">
+                                    <label>Teléfono</label>
+                                    <TelerikMaskedTextBox Id="text4" Class="form-control" Mask="(999) 000-000-00-00" @bind-Value="customer.Phone" />
+                                    <TelerikValidationMessage For="@(() => customer.Phone)" />
+                                </div><br />
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <button class="btn btn-primary" type="submit">Crear</button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="m-4 mt-0">
+                    <TelerikGrid @ref="CustomerService.CustomerGrid"
+                                 TItem=@CustomerDto
+                                 OnRead=@((args) => CustomerService.GetCustomers(args))
+                                 ScrollMode="@GridScrollMode.Virtual"
+                                 FilterMode="@GridFilterMode.FilterMenu"
+                                 EditMode="GridEditMode.Popup"
+                                 Height="560px"
+                                 Sortable="true"
+                                 Resizable="true"
+                                 Reorderable="true"
+                                 Navigable="true"
+                                 Groupable="true"
+                                 RowHeight="40" 
+                                 PageSize="15"
+                                 LoadGroupsOnDemand="true"
+                                 EnableLoaderContainer="true"
+                                 Class="table-striped">
+                        <GridSettings>
+                        </GridSettings>
+                        <GridToolBarTemplate>
+                            <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">Exportar a Excel</GridCommandButton>
+                            <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" />Exportar todas las paginas</label>
+                            <span class="k-toolbar-spacer"></span>
+                            <GridSearchBox Width="250px"
+                                           DebounceDelay="200">
+                            </GridSearchBox>
+                        </GridToolBarTemplate>
+                        <GridExport>
+                            <GridExcelExport FileName="Clientes" AllPages="@ExportAllPages" />
+                        </GridExport>
+                        <GridColumns>
+                            <GridColumn Field="CustomerId" Title="ID" Width="100px" />
+                            <GridColumn Field="CompanyName" Title="Compañia" />
+                            <GridColumn Field="ContactName" Title="Nombre de Contacto" />
+                            <GridColumn Field="City" Title="Ciudad" />
+                        </GridColumns>
+                    </TelerikGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus-within {
+        border-color: #e51a5f;
+    }
+</style>
+
+@code {
+    public CustomerDto customer = new();
+    bool ExportAllPages { get; set; }
+
+    public string txt1 { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("cargaScript", "assets/js/libreriaGeneral1.js");
+            await js.InvokeVoidAsync("adicionarEstilo", "text1", "form-control");
+            await js.InvokeVoidAsync("adicionarEstilo", "text2", "form-control");
+            await js.InvokeVoidAsync("adicionarEstilo", "text3", "form-control");
+            await js.InvokeVoidAsync("adicionarEstilo", "text4", "form-control");
+        }
+    }
+
+
+    async Task CreateCustomer()
+    {
+
+        customer = await CustomerService.CreateCustomer(customer);
+    }
+
+    void SubmitHandle()
+    {
+        CustomerService.DialogVisible = true;
+    }
+
+}

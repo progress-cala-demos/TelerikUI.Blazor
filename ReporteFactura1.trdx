@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report DataSourceName="DSOrdenesMaestro" Width="15.92cm" Culture="en-US" Name="Invoice1" ShowSnapGrid="True" SnapGridSize="0.1cm" xmlns="http://schemas.telerik.com/reporting/2023/1.0">
+  <DataSources>
+    <SqlDataSource QueryDesignerState="null" ParameterValues="{&quot;@IDOrden&quot;:&quot;10250&quot;}" ConnectionString="Data Source=[servidor];Initial Catalog=dbdemo01;User ID=[usuario];Password=[contraseña]" ProviderName="System.Data.SqlClient" SelectCommand="select top 2 ords.*, csts.*, emps.*, shps.* from [dbo].[Orders] ords with(nolock)&#xD;&#xA;inner join Customers csts with(nolock) on ords.CustomerID = csts.CustomerID&#xD;&#xA;inner join Employees emps with(nolock) on ords.EmployeeID = emps.EmployeeID&#xD;&#xA;inner join Shippers shps with(nolock) on ords.ShipVia = shps.ShipperID&#xD;&#xA;&#xD;&#xA;where ords.OrderID = @IDOrden&#xD;&#xA;" Name="DSOrdenesMaestro">
+      <Parameters>
+        <SqlDataSourceParameter DbType="String" Name="@IDOrden">
+          <Value>
+            <String>= Parameters.IDOrden.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+    <SqlDataSource QueryDesignerState="null" ParameterValues="null" ConnectionString="Data Source=[servidor];Initial Catalog=dbdemo01;User ID=[usuario];Password=[contraseña]" ProviderName="System.Data.SqlClient" SelectCommand="select top 10 ord.OrderID from [dbo].[Orders] ord with(nolock)" Name="DSOrdenesID" />
+    <SqlDataSource QueryDesignerState="null" ParameterValues="{&quot;@IDOrden&quot;:&quot;10250&quot;}" ConnectionString="Data Source=[dbdemo01];Initial Catalog=dbdemo01;User ID=[usuario];Password=[contraseña]" ProviderName="System.Data.SqlClient" SelectCommand="select ordsd.*, prds.* from [dbo].[OrderDetails] ordsd with(nolock)&#xD;&#xA;inner join Products prds with(nolock) on ordsd.ProductID = prds.ProductID&#xD;&#xA;&#xD;&#xA;where ordsd.OrderID = @IDOrden" Name="DSOrdenesDetalle">
+      <Parameters>
+        <SqlDataSourceParameter DbType="String" Name="@IDOrden">
+          <Value>
+            <String>= Parameters.IDOrden.Value</String>
+          </Value>
+        </SqlDataSourceParameter>
+      </Parameters>
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <PageHeaderSection Height="1.299in" Name="pageHeaderSection">
+      <Items>
+        <TextBox Width="3.5cm" Height="1cm" Left="0cm" Top="0cm" Value="ORDER" Name="invoiceHeaderTextBox">
+          <Style>
+            <Font Size="18pt" Bold="True" />
+            <Padding Left="0pt" />
+          </Style>
+        </TextBox>
+        <Panel Width="6.1cm" Height="1.401cm" Left="0cm" Top="1.4cm" Name="invoiceInfoPanel">
+          <Style>
+            <BorderStyle Default="Solid" />
+            <BorderColor Default="Silver" />
+          </Style>
+          <Items>
+            <Panel Width="2.1cm" Height="1.4cm" Left="0cm" Top="0cm" Name="invoiceNrPanel">
+              <Items>
+                <TextBox Width="2.1cm" Height="0.7cm" Left="0cm" Top="0cm" Value="ORDER NO" Name="invoiceNumberHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="2.1cm" Height="0.7cm" Left="0cm" Top="0.7cm" Value="=Fields.[OrderID]" Name="invoiceNrTextBox">
+                  <Style VerticalAlign="Middle">
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+            <Panel Width="2cm" Height="1.4cm" Left="2.1cm" Top="0cm" Name="invoiceDatePanel">
+              <Style>
+                <BorderStyle Left="Solid" Right="Solid" />
+                <BorderColor Default="Silver" />
+              </Style>
+              <Items>
+                <TextBox Width="2cm" Height="0.7cm" Left="0cm" Top="0cm" Value="DATE" Name="invoiceDateHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" Left="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="2cm" Height="0.7cm" Left="0cm" Top="0.7cm" Value="=Fields.[OrderDate]" Format="{0:d}" Name="invoiceDateTextBox">
+                  <Style VerticalAlign="Middle">
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+            <TextBox Width="1.999cm" Height="0.7cm" Left="4.101cm" Top="0.701cm" Value="{[PageNumber]} of {[PageCount]}" Name="pagesTextBox">
+              <Style VerticalAlign="Middle">
+                <Padding Left="0.2cm" />
+              </Style>
+            </TextBox>
+            <TextBox Width="1.999cm" Height="0.7cm" Left="4.1cm" Top="0cm" Value="PAGE" Name="pagesHeaderTextBox">
+              <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                <Font Size="8pt" Bold="True" />
+                <BorderStyle Bottom="Solid" Left="Solid" />
+                <BorderColor Default="Silver" />
+                <Padding Left="0.3cm" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <PictureBox Image="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" Width="4.561cm" Height="2.8cm" Left="11.139cm" Top="0cm" Sizing="ScaleProportional" MimeType="image/png" Name="companyLogoPictureBox">
+          <Style TextAlign="Center" VerticalAlign="Middle" />
+        </PictureBox>
+        <Barcode Width="3.8cm" Height="1.4cm" Left="7cm" Top="1.401cm" Value="= Fields.OrderID" Name="barcode1">
+          <Encoder>
+            <Code128Encoder />
+          </Encoder>
+        </Barcode>
+      </Items>
+    </PageHeaderSection>
+    <DetailSection Height="2.087in" Name="detailSection1">
+      <Style>
+        <Font Size="11pt" />
+        <BorderStyle Default="Solid" Top="None" />
+        <BorderColor Default="Silver" />
+      </Style>
+      <Items>
+        <Table DataSourceName="DSOrdenesDetalle" Width="15.899cm" Height="4.751cm" Left="0cm" Top="0cm" ColumnHeadersPrintOnEveryPage="True" KeepTogether="False" Name="detailsTable" StyleName="Normal.TableNormal">
+          <Body>
+            <Cells>
+              <TableCell RowIndex="0" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.072cm" Height="1.151cm" Left="0cm" Top="0cm" Value="=Fields.[UnitPrice]" Format="{0:C2}" Name="unitPriceTextBox" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right">
+                      <Padding Right="0.2cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="4" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.135cm" Height="1.151cm" Left="0cm" Top="0cm" Value="=(Fields.[Quantity] * Fields.[UnitPrice])" Format="{0:C2}" Name="lineTotalTextBox" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right">
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="1.433cm" Height="1.151cm" Left="0cm" Top="0cm" Value="=Fields.[Quantity]" Name="qtyTextBox" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right">
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="5.478cm" Height="1.151cm" Left="0cm" Top="0cm" Value="=Fields.[ProductName]" Name="itemDescriptionTextBox" StyleName="Normal.TableBody">
+                    <Style>
+                      <Padding Left="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="0" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="2.782cm" Height="1.151cm" Left="0cm" Top="0cm" Value="=Fields.ProductID" Name="itemNrTextBox" StyleName="Normal.TableBody">
+                    <Style>
+                      <Padding Left="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="1" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="2.782cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox1" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Left="None" Right="None" />
+                      <BorderWidth Top="2pt" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="1" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="5.478cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox2" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Left="None" Right="None" />
+                      <BorderWidth Top="2pt" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="1" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="1.433cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox3" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Left="None" Right="None" />
+                      <BorderWidth Top="2pt" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="2" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="2.782cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox6" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Default="None" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="2" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="5.478cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox8" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Default="None" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="2" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="1.433cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox10" StyleName="Normal.TableBody">
+                    <Style>
+                      <BorderStyle Default="None" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="2" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.072cm" Height="1cm" Left="0cm" Top="0cm" Value="Discount" Name="unitDiscountLabelTextBox" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right" VerticalAlign="Middle">
+                      <Font Bold="False" />
+                      <BorderStyle Default="None" Right="Solid" />
+                      <BorderColor Default="Silver" />
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="1" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.072cm" Height="1cm" Left="0cm" Top="0cm" Value="Sub Total" Name="textBox12" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right" VerticalAlign="Middle">
+                      <Font Bold="True" />
+                      <BorderStyle Left="None" />
+                      <BorderWidth Top="2pt" />
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="1" ColumnIndex="4" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.135cm" Height="1cm" Left="0cm" Top="0cm" Value="=Sum(Fields.[UnitPrice] * Fields.[Quantity])" Format="{0:C2}" Name="textBox4" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right" VerticalAlign="Middle">
+                      <Font Bold="True" />
+                      <BorderStyle Left="Solid" />
+                      <BorderWidth Top="2pt" />
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="2" ColumnIndex="4" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.135cm" Height="1cm" Left="0cm" Top="0cm" Value="=Sum(Fields.[Quantity] * Fields.[Discount])" Format="{0:C2}" Name="unitDiscountTextBox" StyleName="Normal.TableBody">
+                    <Style TextAlign="Right" VerticalAlign="Middle">
+                      <Font Bold="False" />
+                      <BorderStyle Default="None" Left="Solid" />
+                      <BorderColor Default="Silver" />
+                      <Padding Left="0.3cm" Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="3" ColumnIndex="0" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="2.782cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox5" StyleName="Normal.TableTotal" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="3" ColumnIndex="1" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="5.478cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox13" StyleName="Normal.TableTotal" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="3" ColumnIndex="2" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="1.433cm" Height="1cm" Left="0cm" Top="0cm" Value="" Name="textBox17" StyleName="Normal.TableTotal" />
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="3" ColumnIndex="3" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.072cm" Height="1cm" Left="0cm" Top="0cm" Value="TOTAL" Name="totalLabelTextBox" StyleName="Normal.TableTotal">
+                    <Style>
+                      <BorderStyle Right="Solid" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+              <TableCell RowIndex="3" ColumnIndex="4" RowSpan="1" ColumnSpan="1">
+                <ReportItem>
+                  <TextBox Width="3.135cm" Height="1cm" Left="0cm" Top="0cm" Value="=(Sum(Fields.[UnitPrice] * Fields.[Quantity]) - Sum(Fields.[Quantity] * Fields.[Discount]))" Format="{0:C2}" Name="totalTextBox" StyleName="Normal.TableTotal">
+                    <Style>
+                      <BorderStyle Left="Solid" />
+                      <Padding Right="0.3cm" />
+                    </Style>
+                  </TextBox>
+                </ReportItem>
+              </TableCell>
+            </Cells>
+            <Columns>
+              <Column Width="2.782cm" />
+              <Column Width="5.478cm" />
+              <Column Width="1.433cm" />
+              <Column Width="3.072cm" />
+              <Column Width="3.135cm" />
+            </Columns>
+            <Rows>
+              <Row Height="1.151cm" />
+              <Row Height="1cm" />
+              <Row Height="1cm" />
+              <Row Height="1cm" />
+            </Rows>
+          </Body>
+          <Corner />
+          <Style>
+            <BorderStyle Default="Solid" />
+            <BorderColor Default="Silver" Bottom="Black" />
+          </Style>
+          <RowGroups>
+            <TableGroup Name="Detail">
+              <Groupings>
+                <Grouping />
+              </Groupings>
+            </TableGroup>
+            <TableGroup Name="group3" />
+            <TableGroup Name="group4" />
+            <TableGroup Name="group6" />
+          </RowGroups>
+          <ColumnGroups>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="2.782cm" Height="0.6cm" Left="0.001cm" Top="0cm" Value="No" Name="ItemNoHeaderTextBox" StyleName="Normal.TableHeader">
+                  <Style>
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="5.478cm" Height="0.6cm" Left="2.8cm" Top="0cm" Value="DESCRIPTION" Name="descriptionHeaderTextBox" StyleName="Normal.TableHeader">
+                  <Style>
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="1.433cm" Height="0.6cm" Left="8.261cm" Top="0cm" Value="QTY" Name="qtyHeaderTextBox" StyleName="Normal.TableHeader">
+                  <Style>
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup>
+              <ReportItem>
+                <TextBox Width="3.072cm" Height="0.6cm" Left="9.7cm" Top="0cm" Value="UNIT PRICE" Name="unitPriceHeaderTextBox" StyleName="Normal.TableHeader">
+                  <Style>
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+            <TableGroup Name="group1">
+              <ReportItem>
+                <TextBox Width="3.135cm" Height="0.6cm" Left="12.821cm" Top="0cm" Value="LINE TOTAL" Name="lineTotalHeaderTextBox" StyleName="Normal.TableHeader">
+                  <Style>
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </ReportItem>
+            </TableGroup>
+          </ColumnGroups>
+        </Table>
+        <TextBox Width="15.899cm" Height="0.549cm" Left="0cm" Top="4.752cm" Value="Payment due in {Fields.[OrderDate]} days" Name="paymentDueDaysTextBox">
+          <Style TextAlign="Center" VerticalAlign="Middle">
+            <Font Size="10pt" Bold="True" />
+            <BorderStyle Default="Solid" Top="None" />
+            <BorderColor Default="Silver" />
+          </Style>
+        </TextBox>
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.197in" Name="pageFooterSection1">
+      <Items>
+        <TextBox Width="15.899cm" Height="0.499cm" Left="0cm" Top="0cm" Value="IT IS ONLY A DEMO!" Name="pageFooterTextBox">
+          <Style TextAlign="Center" VerticalAlign="Top">
+            <Font Size="10pt" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageFooterSection>
+    <ReportHeaderSection Height="5.499cm" Name="reportHeaderSection">
+      <Style>
+        <Padding Top="0.5cm" Bottom="0.5cm" />
+      </Style>
+      <Items>
+        <Panel Width="10.401cm" Height="2.601cm" Left="0.001cm" Top="0.026cm" Name="billToShipToPanel">
+          <Style>
+            <BorderStyle Default="Solid" />
+            <BorderColor Default="Silver" />
+          </Style>
+          <Items>
+            <Panel Width="5.2cm" Height="2.601cm" Left="0.001cm" Top="0cm" Name="billToPanel">
+              <Style>
+                <Font Size="9pt" />
+                <BorderStyle Right="Solid" />
+                <BorderColor Default="Silver" />
+                <Padding Bottom="0.2cm" />
+              </Style>
+              <Items>
+                <TextBox Width="5.2cm" Height="0.7cm" Left="0cm" Top="0cm" Value="BILL TO" Name="billToHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" Right="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.2cm" Height="0.5cm" Left="0cm" Top="1.1cm" Value="=Fields.[CompanyName]" Name="billToNameTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.2cm" Height="0.5cm" Left="0cm" Top="1.6cm" Value="=Fields.[Phone]" Name="billToPhoneTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.2cm" Height="0.5cm" Left="0cm" Top="2.101cm" Value="=Fields.[Address]" Name="billToAddressTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+            <Panel Width="5.2cm" Height="2.601cm" Left="5.201cm" Top="0cm" Name="shipToPanel">
+              <Style>
+                <Font Size="9pt" />
+                <BorderStyle Bottom="None" Left="Solid" />
+                <BorderColor Default="Silver" />
+                <Padding Bottom="0.2cm" />
+              </Style>
+              <Items>
+                <TextBox Width="5.199cm" Height="0.7cm" Left="0cm" Top="0cm" Value="SHIP TO" Name="shipToHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" Left="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.188cm" Height="0.5cm" Left="0cm" Top="1.1cm" Value="=Fields.[CompanyName]" Name="shipToNameTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.188cm" Height="0.5cm" Left="0cm" Top="1.6cm" Value="=Fields.[Phone]" Name="shipToPhoneTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="5.188cm" Height="0.5cm" Left="0cm" Top="2.101cm" Value="=Fields.[Address]" Name="shipToAddressTextBox">
+                  <Style>
+                    <Padding Left="0.2cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+          </Items>
+        </Panel>
+        <Panel Width="4.761cm" Height="2.975cm" Left="11.139cm" Top="0.026cm" Name="CompanyInfoPanel">
+          <Items>
+            <TextBox Width="4.761cm" Height="0.575cm" Left="0cm" Top="0cm" Value="=Fields.[CompanyName]" Name="companyNameTextBox">
+              <Style>
+                <Font Size="11pt" Bold="True" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.761cm" Height="0.574cm" Left="0cm" Top="0.575cm" Value="=Fields.[Address]" Name="companyAddressTextBox">
+              <Style VerticalAlign="Middle">
+                <Font Size="9pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.761cm" Height="0.6cm" Left="0cm" Top="1.149cm" Value="Phone: {Fields.[Phone]}" Name="companyPhoneTextBox">
+              <Style VerticalAlign="Middle">
+                <Font Size="9pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.761cm" Height="0.6cm" Left="0cm" Top="1.749cm" Value="Fax: {Fields.[Fax]}" Name="companyFaxTextBox">
+              <Style VerticalAlign="Middle">
+                <Font Size="9pt" />
+              </Style>
+            </TextBox>
+            <TextBox Width="4.761cm" Height="0.6cm" Left="0cm" Top="2.349cm" Value="e-mail: {Fields.[ContactTitle]}" Name="companyEmailTextBox">
+              <Style VerticalAlign="Middle">
+                <Font Size="9pt" />
+              </Style>
+            </TextBox>
+          </Items>
+        </Panel>
+        <Panel Width="10.402cm" Height="1.4cm" Left="0cm" Top="3.099cm" Name="SalesPersonPurchaseOrderShipmentPanel">
+          <Style>
+            <BorderStyle Default="Solid" />
+            <BorderColor Default="Silver" />
+          </Style>
+          <Items>
+            <Panel Width="3.5cm" Height="1.4cm" Left="0cm" Top="0cm" Name="salesPersonPanel">
+              <Style>
+                <BorderStyle Default="Solid" />
+                <BorderColor Default="Silver" />
+              </Style>
+              <Items>
+                <TextBox Width="3.499cm" Height="0.7cm" Left="0cm" Top="0cm" Value="SALES PERSON" Name="salesPersonHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="3.499cm" Height="0.7cm" Left="0.001cm" Top="0.7cm" Value="=Fields.[FirstName]" TextWrap="False" Name="salesPersonNameTextBox">
+                  <Style VerticalAlign="Middle">
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+            <Panel Width="3.5cm" Height="1.4cm" Left="3.5cm" Top="0cm" Name="purchaseOrderPanel">
+              <Style>
+                <BorderStyle Default="Solid" />
+                <BorderColor Default="Silver" />
+              </Style>
+              <Items>
+                <TextBox Width="3.5cm" Height="0.7cm" Left="0cm" Top="0cm" Value="PURCHASE ORDER" Name="purchaseOrderHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" Left="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="3.5cm" Height="0.7cm" Left="0cm" Top="0.7cm" Value="=Fields.[OrderID]" TextWrap="False" Name="purchaseOrderNrTextBox">
+                  <Style VerticalAlign="Middle">
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+            <Panel Width="3.401cm" Height="1.4cm" Left="7cm" Top="0cm" Name="shipmentMethodPanel">
+              <Style>
+                <BorderStyle Default="Solid" />
+                <BorderColor Default="Silver" />
+              </Style>
+              <Items>
+                <TextBox Width="3.39cm" Height="0.7cm" Left="0cm" Top="0cm" Value="SHIPMENT METHOD" Name="shipmentMethodHeaderTextBox">
+                  <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+                    <Font Size="8pt" Bold="True" />
+                    <BorderStyle Bottom="Solid" Left="Solid" />
+                    <BorderColor Default="Silver" />
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+                <TextBox Width="3.401cm" Height="0.7cm" Left="0cm" Top="0.7cm" Value="=Fields.[ShipRegion]" TextWrap="False" Name="shipmentMethodTextBox">
+                  <Style VerticalAlign="Middle">
+                    <Padding Left="0.3cm" />
+                  </Style>
+                </TextBox>
+              </Items>
+            </Panel>
+          </Items>
+        </Panel>
+      </Items>
+    </ReportHeaderSection>
+  </Items>
+  <PageSettings PaperKind="A4" Landscape="False">
+    <Margins>
+      <MarginsU Left="1in" Right="1in" Top="1in" Bottom="1in" />
+    </Margins>
+  </PageSettings>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style BackgroundColor="Gainsboro" Color="DimGray" VerticalAlign="Middle">
+        <Font Name="Arial" Size="8pt" Bold="True" />
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Silver" />
+        <BorderWidth Default="1pt" />
+        <Padding Left="0.3cm" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableHeader" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style VerticalAlign="Middle">
+        <Font Name="Arial" Size="11pt" />
+        <BorderStyle Default="Solid" />
+        <BorderColor Default="Silver" />
+        <BorderWidth Default="1pt" />
+        <Padding Left="0.3cm" />
+      </Style>
+      <Selectors>
+        <DescendantSelector>
+          <Selectors>
+            <TypeSelector Type="Table" />
+            <StyleSelector Type="ReportItem" StyleName="Normal.TableBody" />
+          </Selectors>
+        </DescendantSelector>
+      </Selectors>
+    </StyleRule>
+    <StyleRule>
+      <Style BackgroundColor="Silver" TextAlign="Right" VerticalAlign="Middle">
+        <Font Size="11pt" Bold="True" />
+        <BorderStyle Default="None" Top="Solid" Bottom="Solid" />
+        <BorderWidth Default="1pt" />
+        <Padding Right="0.3cm" />
+      </Style>
+      <Selectors>
+        <StyleSelector Type="ReportItemBase" StyleName="Normal.TableTotal" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <ReportParameters>
+    <ReportParameter Name="IDOrden" Text="Orden #" Visible="True" AllowBlank="False">
+      <AvailableValues DataSourceName="DSOrdenesID" DisplayMember="= Fields.OrderID" ValueMember="= Fields.OrderID" />
+      <Value>
+        <String>= First(Fields.OrderID)</String>
+      </Value>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

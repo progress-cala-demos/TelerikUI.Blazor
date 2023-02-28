@@ -1,0 +1,127 @@
+﻿@page "/pagina2"
+@inject ProductService ProductService
+@inject CategoryService CategoryService
+@inject GridConfig GridConfig
+
+<PageTitle>Productos</PageTitle>
+
+<div class="container-fluid my-3 py-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4" id="basic-info">
+                <div class="card-header">
+                    <h5>Productos</h5>
+                </div>
+                <div class="m-4 mt-0">
+                    <TelerikGrid TItem=@ProductDto
+                                 OnRead=@((args) => ProductService.GetProducts(args))
+                                 OnCreate=@((args) => ProductService.CreateProduct((ProductDto)args.Item))
+                                 OnUpdate=@((args) => ProductService.UpdateProduct((ProductDto)args.Item))
+                                 FilterMode="@GridFilterMode.FilterMenu"
+                                 EditMode="GridEditMode.Popup"
+                                 Height="660px"
+                                 Sortable="true"
+                                 Pageable="true"
+                                 Resizable="true"
+                                 Reorderable="true"
+                                 Navigable="true"
+                                 Groupable="true"
+                                 LoadGroupsOnDemand="true"
+                                 EnableLoaderContainer="true"
+                                 @bind-Page="GridConfig.CurrentPage"
+                                 @bind-PageSize="GridConfig.PageSize"
+                                 Class="table-striped">
+                        <GridSettings>
+                            <GridPopupEditSettings Width="350px" MaxHeight="700px" />
+                            <GridPagerSettings ButtonCount="GridConfig.ButtonsCount"
+                                               PageSizes="GridConfig.PageSizes"
+                                               InputType="PagerInputType.Buttons"
+                                               Position="PagerPosition.Bottom" />
+                        </GridSettings>
+                        <GridToolBarTemplate>
+                            <GridCommandButton Icon="FontIcon.Plus" Command="Add">Adicionar</GridCommandButton>
+                            <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">Exportar a Excel</GridCommandButton>
+                            <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" /> Exportar todas las paginas</label>
+                        </GridToolBarTemplate>
+                        <GridExport>
+                            <GridExcelExport FileName="Productos" AllPages="@ExportAllPages" />
+                        </GridExport>
+                        <GridColumns>
+                            <GridColumn Field="ProductId" Editable=false Width="100px" />
+                            <GridColumn Field="ProductName" />
+                            <GridColumn Field="CategoryId" Filterable=false>
+                                <Template>
+                                    @{
+                                        var p = context as ProductDto;
+                                        @p.CategoryName
+                                    }
+                                </Template>
+                                <EditorTemplate>
+                                    @{
+                                        var p = context as ProductDto;
+                                        <TelerikDropDownList Data="CategoryService.Categories"
+                                                             @bind-Value="p.CategoryId"
+                                                         DefaultText="Seleccione la categoria"
+                                                         TextField="CategoryName"
+                                                         ValueField="CategoryId">
+                                            <DropDownListSettings>
+                                                <DropDownListPopupSettings Height="auto" MaxHeight="400px" />
+                                            </DropDownListSettings>
+                                        </TelerikDropDownList>
+                                    }
+                                </EditorTemplate>
+                            </GridColumn>
+                            <GridColumn Field="UnitPrice" />
+                            <GridColumn Field="UnitsInStock" Width="150px" />
+                            <GridColumn Field="Discontinued">
+                                <Template>
+                                    @{
+                                        var p = context as ProductDto;
+                                        if (p.Discontinued)
+                                        {
+                                            <span class="k-badge k-badge-md k-badge-solid k-badge-solid-error k-rounded-md">Inactivo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="k-badge k-badge-md k-badge-solid k-badge-solid-success k-rounded-md">Activo</span>
+                                        }
+                                    }
+                                </Template>
+                            </GridColumn>
+                            <GridCommandColumn>
+                                <GridCommandButton Command="Edit" Icon="@FontIcon.Pencil" ThemeColor="@ThemeConstants.Button.ThemeColor.Light">Editar</GridCommandButton>
+                            </GridCommandColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .k-selected.k-list-optionlabel, .k-selected.k-list-optionlabel:hover {
+        color: #7f8b97;
+    }
+
+    .k-list-item.k-selected, .k-list-item.k-selected:hover {
+        color: #E51A5F;
+        font-weight: 900;
+    }
+
+    .k-textbox.k-invalid,
+    .k-textbox.k-state-invalid,
+    .k-textbox.ng-invalid.ng-dirty,
+    .k-textbox.ng-invalid.ng-touched {
+        border-color: red;
+    }
+</style>
+
+@code {
+    bool ExportAllPages { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetCategories();
+    }
+}

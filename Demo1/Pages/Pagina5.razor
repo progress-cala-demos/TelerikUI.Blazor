@@ -1,0 +1,110 @@
+﻿
+@page "/pagina5"
+
+@using System.Globalization;
+@inject ProductService ProductService
+@inject GridConfig GridConfig
+@inject ITelerikStringLocalizer Localizer
+
+@* https://demos.telerik.com/blazor-ui/grid/overview *@
+@* https://docs.telerik.com/blazor-ui/components/grid/overview *@
+
+<PageTitle>Products-U-Table2</PageTitle>
+
+<div class="container-fluid my-3 py-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4" id="basic-info">
+                <div class="card-header">
+                    <h5>Productos-2</h5>
+                </div>
+                <div class="m-4 mt-0">
+
+                    <TelerikGrid TItem=@ProductDto
+                                 OnRead=@((args) => ProductService.GetProducts(args))
+                                 OnCreate=@((args) => ProductService.CreateProduct((ProductDto)args.Item))
+                                 OnUpdate=@((args) => ProductService.UpdateProduct((ProductDto)args.Item))                                
+                                 ScrollMode="@GridScrollMode.Scrollable"                                 
+                                 RowHeight="40"
+                                 FilterMode="@GridFilterMode.FilterMenu"
+                                 EditMode="GridEditMode.Popup"
+                                 Height="660px"                                 
+                                 Sortable="true"
+                                 Pageable="true"
+                                 Resizable="true"
+                                 Reorderable="true"
+                                 Navigable="true"
+                                 Groupable="true"                                 
+                                 PageSize="10"
+                                 SelectionMode="GridSelectionMode.Single"
+                                 @bind-Page="GridConfig.CurrentPage"
+                                 LoadGroupsOnDemand="true"
+                                 Class="table-striped">
+                        <GridSettings>
+                            <GridPopupEditSettings Width="350px" MaxHeight="700px" />
+                            <GridPagerSettings ButtonCount="10"
+                                               PageSizes="new List<int?> { 10, 20, null }"
+                                               InputType="PagerInputType.Buttons"
+                                               Position="PagerPosition.Bottom" />
+                        </GridSettings>
+                        <GridToolBarTemplate>
+                            <GridCommandButton Icon="FontIcon.Plus" Command="Add" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">@Localizer["Grid_Create"]</GridCommandButton>
+                            <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">Exportar a Excel</GridCommandButton>
+                        </GridToolBarTemplate>
+                        <GridExport>
+                            <GridExcelExport FileName="Productos" AllPages="true" />
+                        </GridExport>
+                        <GridColumns>
+                            <GridColumn Field="ProductId" Editable=false Width="100px" />
+                            <GridColumn Field="ProductName">
+                                <EditorTemplate>
+                                    @{
+                                        var currItem = (ProductDto)context;
+                                        <TelerikTextBox @bind-Value="currItem.ProductName"></TelerikTextBox>
+                                        <TelerikValidationMessage For="@(() => currItem.ProductName)"></TelerikValidationMessage>
+                                    }
+                                </EditorTemplate>
+                            </GridColumn>
+                            <GridColumn Field="UnitPrice" DisplayFormat="{0:C1}" />
+                            <GridColumn Field="UnitsInStock" Width="150px" />
+                            <GridColumn Field="Discontinued">
+                                <Template>
+                                    @{
+                                        var p = context as ProductDto;
+                                        if (p.Discontinued)
+                                        {
+                                            <span>Inactivo</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Activo</span>
+                                        }
+                                    }
+                                </Template>
+                            </GridColumn>
+                            <GridCommandColumn Width="300px">
+                                <GridCommandButton Command="Edit" Icon="@FontIcon.Pencil" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Editar</GridCommandButton>
+                                <GridCommandButton Size="@ThemeConstants.Button.Size.Small" Command="Save" Icon="@FontIcon.Save" ShowInEdit="true" ThemeColor="primary">Aceptar</GridCommandButton>
+                                <GridCommandButton Size="@ThemeConstants.Button.Size.Small" Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true">Cancelar</GridCommandButton>
+                            </GridCommandColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .k-textbox.k-invalid,
+    .k-textbox.k-state-invalid,
+    .k-textbox.ng-invalid.ng-dirty,
+    .k-textbox.ng-invalid.ng-touched {
+        border-color: red;
+    }
+</style>
+
+@code {
+    public bool ExportAllPages { get; set; }
+}
