@@ -29,7 +29,7 @@ Esta Aplicación Web contiene ejemplos prácticos en el uso de algunos de los co
 
 # ARCHIVOS EXTERNOS
 + **ReporteFactura1.trdx**: Archivo XML fuente del reporte creado con "Report Designer".
-+ **dbdemo01_27feb2023_1.bak**: Backup de la DB, esta basada en la DB Northwind, pero esta versión se ha sometido a cambios..
++ **dbdemo01_27feb2023_1.bak**: Backup de la DB, está basada en la DB Northwind, pero esta versión se ha sometido a cambios.
 
 # ACERCA DEL AUTOR
 _Oscar Nivia_, Ingeniero de Preventa Progress Software para CALA
