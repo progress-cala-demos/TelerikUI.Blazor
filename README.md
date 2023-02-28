@@ -28,7 +28,7 @@ Esta Aplicación Web contiene ejemplos prácticos en el uso de algunos de los co
 	+ Copyright © [Creative-Tim](https://www.creative-tim.com/product/material-dashboard-pro)
 
 # ARCHIVOS EXTERNOS
-+ **ReporteFactura1.trdx**: Archivo XML fuente del reporte creado con el Reporting Designer.
++ **ReporteFactura1.trdx**: Archivo XML fuente del reporte creado con "Reporting Designer".
 + **dbdemo01_27feb2023_1.bak**: Backup de la DB, esta basada en la DB Northwind, pero esta versión se ha sometido a cambios..
 
 # ACERCA DEL AUTOR
