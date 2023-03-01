@@ -14,7 +14,7 @@
                 </div>
                 <div class="m-4 mt-0">
                     <TelerikGrid @ref="OrderService.OrderGrid"
-                                 TItem=@OrderDto
+                                 TItem=OrderDto
                                  OnRead=@((args) => OrderService.GetOrders(args))
                                  OnCreate=@((args) => OrderService.CreateOrder((OrderDto)args.Item))
                                  OnUpdate=@((args) => OrderService.UpdateOrder((OrderDto)args.Item))
