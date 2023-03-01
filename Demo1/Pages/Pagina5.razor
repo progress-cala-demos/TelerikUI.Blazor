@@ -20,7 +20,7 @@
                 </div>
                 <div class="m-4 mt-0">
 
-                    <TelerikGrid TItem=@ProductDto
+                    <TelerikGrid TItem=ProductDto
                                  OnRead=@((args) => ProductService.GetProducts(args))
                                  OnCreate=@((args) => ProductService.CreateProduct((ProductDto)args.Item))
                                  OnUpdate=@((args) => ProductService.UpdateProduct((ProductDto)args.Item))                                
